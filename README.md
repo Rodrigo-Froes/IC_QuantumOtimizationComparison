@@ -1,25 +1,53 @@
-# Otimização Combinatória: Caixeiro Viajante (TSP)
+# ⚛️ Otimização Combinatória Quântica: Caixeiro Viajante (TSP)
 
-Este repositório contém a infraestrutura automatizada para comparação quantitativa do Problema do Caixeiro Viajante (TSP) entre solvers exatos clássicos e algoritmos de computação quântica.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg)](https://www.python.org/)
+[![Qiskit](https://img.shields.io/badge/Qiskit-1.0%2B-6100FF.svg)](https://qiskit.org/)
+[![D-Wave Ocean](https://img.shields.io/badge/D--Wave-Ocean%20SDK-00A9E0.svg)](https://www.dwavesys.com/)
+[![License](https://img.shields.io/badge/Status-Em%20Desenvolvimento-orange.svg)]()
+
+> **Projeto de Iniciação Científica** focado no estudo comparativo de desempenho, consumo de recursos e convergência entre Solvers Clássicos Exatos e Abordagens Quânticas (Circuitos Quânticos e Recozimento Quântico) aplicados ao Problema do Caixeiro Viajante (*Traveling Salesperson Problem - TSP*).
+
+---
 
 ## 📊 Relatório Executivo e Resultados
-A análise detalhada dos testes, incluindo tabelas comparativas e gráficos de tempo de execução e consumo de memória RAM, pode ser acessada diretamente pelo link:
 
-👉 **[Acessar Relatório Completo (reports/relatorio_inicial.md)](reports/relatorio_inicial.md)**
+A análise quantitativa completa, contendo gráficos de tempo de execução, consumo de memória RAM e percentuais de aproximação do ótimo, é gerada automaticamente pelo pipeline do projeto.
 
-## 🛠️ Solvers Implementados
-* **Linha de Base Clássica:** SciPy MILP (Programação Linear Inteira Misturada - Gabarito Exato)
-* **Quântico por Circuitos:** Qiskit (Simulador QUBO)
-* **Recozimento Quântico:** D-Wave Ocean SDK (`neal` Simulated Annealer)
+👉 **[Acessar Relatório de Benchmarking (reports/relatorio_inicial.md)](reports/relatorio_inicial.md)**
 
-## 🚀 Como Rodar o Projeto
-```bash
-# 1. Ativar o ambiente virtual
-# Windows: .\venv\Scripts\activate
-# Linux/Mac: source venv/bin/activate
+---
 
-# 2. Instalar dependências
-pip install -r environment/requirements.txt
+## 🛠️ Solvers & Abordagens Implementadas
 
-# 3. Executar o pipeline completo (Gera gráficos e relatórios)
-python -m src.main
+| Paradigma | Implementação | Algoritmo / Solver | Descrição |
+| :--- | :--- | :--- | :--- |
+| **Clássico Exato** | `SciPy` / `PuLP` | MILP / Permutação Exata | Linha de Base (Gabarito de Verdade 100% Ótimo) |
+| **Quântico por Circuitos** | `Qiskit` | Formulação QUBO / Simulador | Mapeamento por matriz de custo e restrições quadráticas |
+| **Recozimento Quântico** | `D-Wave Ocean` | `neal` Simulated Annealer | Modelo Quadrático Binário (BQM) via *Quantum Annealing* |
+
+---
+
+## 🏗️ Arquitetura e Estrutura do Repositório
+
+O projeto adota uma arquitetura modular orientada a **MVP**, isolando a lógica dos solvers, a coleta de métricas e a geração automática de relatórios:
+
+```text
+.
+├── src/
+│   ├── config.py          # Configurações globais (Seeds, Penalidades QUBO, Paths)
+│   ├── models.py          # DataClasses tipadas para resultados e métricas
+│   ├── metrics.py         # Decorador para monitoramento de Tempo e Memória (tracemalloc)
+│   ├── checkpoints.py     # Gerenciamento de cache e persistência incremental (JSON)
+│   ├── reporter.py        # Gerador automático de figuras (.png) e relatórios (.md)
+│   ├── main.py            # Orquestrador principal da CLI
+│   └── solvers/
+│       ├── base.py        # Interface abstrata dos Solvers (Polimorfismo)
+│       ├── scipy_solver.py # Gabarito exato MILP
+│       ├── qiskit_solver.py # Simulador QUBO Qiskit
+│       └── dwave_solver.py  # Simulated Annealer D-Wave Ocean
+├── .checkpoints/          # Cache local de execuções
+├── figures/               # Gráficos de alta resolução (.png) gerados pelo pipeline
+├── reports/               # Relatórios executivos formatados em Markdown (.md)
+├── environment/
+│   └── requirements.txt   # Dependências do projeto
+└── README.md
